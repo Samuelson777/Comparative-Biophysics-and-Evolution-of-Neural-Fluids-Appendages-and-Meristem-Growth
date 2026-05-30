@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparative Growth & Hydration Dynamics | Samuelson G.</title>
+    
+    <!-- Chosen Palette: Warm Earth Neutrals (Stone base, Teal & Sienna accents) -->
+    <!-- Application Structure Plan: The application is structured as a multi-view interactive dashboard mimicking a digital research paper. It uses a top-level tab navigation to segment the distinct ontological categories (Human vs. Botanical) before bringing them together in a Synthesis view. This thematic chunking prevents cognitive overload while allowing users to explore the contrasting mechanisms (fluid dynamics vs. cellular proliferation) at their own pace. -->
+    <!-- Visualization & Content Choices: 
+         1) Brain Hydration: Doughnut chart (Chart.js) -> Goal: Inform composition -> Justification: Clearest way to show parts-of-a-whole without SVG.
+         2) Growth Rates: Interactive Bar chart (Chart.js) -> Goal: Compare -> Interaction: Toggle environmental stress (drought/optimal) -> Justification: Directly answers the core prompt comparing rates. 
+         3) Synthesis: Bubble/Scatter plot (Chart.js) -> Goal: Relationships -> Justification: Maps non-linear relationships (Water dependency vs. Speed).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #faf9f6; /* stone-50 variant */
+            color: #292524; /* stone-800 */
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Lora', serif;
+        }
+
+        /* CRITICAL: Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            min-height: 300px;
+            max-height: 450px;
+        }
+
+        /* Hide sections initially */
+        .view-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-btn.active {
+            border-bottom: 3px solid #0f766e; /* teal-700 */
+            color: #0f766e;
+            font-weight: 600;
+        }
+        
+        .interactive-btn {
+            transition: all 0.2s;
+        }
+        .interactive-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-teal-200 selection:text-teal-900">
+
+    <!-- Header / Navigation -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="py-6">
+                <h1 class="text-3xl md:text-4xl font-semibold text-stone-900 leading-tight">
+                    Differential Dynamics of Biological Proliferation & Hydration
+                </h1>
+                <p class="text-stone-500 mt-2 text-sm md:text-base">
+                    A Comparative Analysis of Human Neurological Fluid, Epidermal Appendages, and Terrestrial Flora
+                </p>
+                <div class="mt-4 flex items-center gap-4 text-sm font-medium text-teal-700">
+                    <span class="bg-teal-50 px-3 py-1 rounded-full border border-teal-100">
+                        &#128100; Lead Researcher: SAMUELSON G.
+                    </span>
+                    <span class="text-stone-400">|</span>
+                    <span class="text-stone-600">Published: Journal of Cross-Disciplinary Biology</span>
+                </div>
+            </div>
+            
+            <nav class="flex overflow-x-auto hide-scrollbar space-x-8 mt-2" aria-label="Tabs">
+                <button onclick="switchView('abstract')" class="nav-btn active whitespace-nowrap py-4 px-1 text-sm font-medium text-stone-500 hover:text-stone-700">
+                    Abstract & Overview
+                </button>
+                <button onclick="switchView('human')" class="nav-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-stone-500 hover:text-stone-700">
+                    Human Systems (Brain & Hair)
+                </button>
+                <button onclick="switchView('botanical')" class="nav-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-stone-500 hover:text-stone-700">
+                    Botanical Systems (Grass & Roots)
+                </button>
+                <button onclick="switchView('synthesis')" class="nav-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-stone-500 hover:text-stone-700">
+                    Comparative Synthesis
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <!-- VIEW: Abstract -->
+        <section id="abstract" class="view-section active">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-stone-100">
+                <h2 class="text-2xl font-semibold text-stone-800 mb-4">Abstract</h2>
+                <p class="text-lg text-stone-600 leading-relaxed mb-6">
+                    This interactive report investigates the fundamental ontological differences between state-based hydration dynamics and structural cellular proliferation. Specifically, we compare the fluid exchange mechanisms of the human brain with the physical growth rates of human hair (keratinization), land grass shoots (photosynthetic above-ground growth), and terrestrial root systems (geotropic subterranean growth). 
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                    <div class="bg-stone-50 p-6 rounded-xl border border-stone-200">
+                        <div class="text-3xl mb-2">&#129468;</div>
+                        <h3 class="font-semibold text-stone-800">Metabolic Fluidity</h3>
+                        <p class="text-sm text-stone-600 mt-2">Brain water does not "grow"; it dynamically cycles. Maintaining a strict ~73% volumetric ratio is critical for cognitive function and cellular osmotic balance.</p>
+                    </div>
+                    <div class="bg-stone-50 p-6 rounded-xl border border-stone-200">
+                        <div class="text-3xl mb-2">&#128135;</div>
+                        <h3 class="font-semibold text-stone-800">Linear Extrusion</h3>
+                        <p class="text-sm text-stone-600 mt-2">Hair exhibits consistent, unyielding cellular extrusion. It is highly insulated from minor systemic hydration changes but influenced by long-term metabolic health.</p>
+                    </div>
+                    <div class="bg-stone-50 p-6 rounded-xl border border-stone-200">
+                        <div class="text-3xl mb-2">&#127793;</div>
+                        <h3 class="font-semibold text-stone-800">Environmentally Linked Proliferation</h3>
+                        <p class="text-sm text-stone-600 mt-2">Grass and roots represent exponential, environmentally-dependent growth, heavily dictated by immediate water availability and soil conditions.</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <button onclick="switchView('human')" class="interactive-btn bg-teal-700 text-white px-6 py-3 rounded-lg font-medium">
+                        Begin Analysis: Human Systems &#8594;
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: Human Systems -->
+        <section id="human" class="view-section">
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-stone-800">Human Biological Systems</h2>
+                <p class="text-stone-600 mt-2">This section contrasts the static volume but high turnover of brain hydration with the slow, structural accumulation of hair keratin.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Brain Water Card -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2 border-b pb-2">Neurological Hydration (Brain Water)</h3>
+                    <p class="text-sm text-stone-600 mb-6">Unlike cellular growth, brain hydration is a steady-state system. The brain requires continuous water turnover via aquaporins to clear metabolic waste, yet absolute volume cannot "grow" due to cranial constraints.</p>
+                    
+                    <div class="chart-container flex-grow">
+                        <canvas id="brainChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center text-xs text-stone-500 bg-stone-50 p-3 rounded-lg">
+                        <strong>Insight:</strong> A mere 2% drop in this water composition results in measurable cognitive decline.
+                    </div>
+                </div>
+
+                <!-- Hair Growth Card -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2 border-b pb-2">Keratinization (Hair Growth)</h3>
+                    <p class="text-sm text-stone-600 mb-6">Hair growth occurs in the follicle matrix. It is a one-way accumulation of dead keratinocytes. It grows at a remarkably steady pace, relatively unbothered by minor daily water intake fluctuations.</p>
+                    
+                    <div class="chart-container flex-grow">
+                        <canvas id="hairChart"></canvas>
+                    </div>
+                    
+                    <div class="mt-4 flex gap-2 justify-center">
+                        <button onclick="updateHairData('normal')" class="px-3 py-1 text-xs border border-stone-300 rounded hover:bg-stone-100">Baseline</button>
+                        <button onclick="updateHairData('stress')" class="px-3 py-1 text-xs border border-amber-300 bg-amber-50 text-amber-700 rounded hover:bg-amber-100">Simulate Metabolic Stress</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: Botanical Systems -->
+        <section id="botanical" class="view-section">
+            <div class="mb-8 flex justify-between items-end flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-semibold text-stone-800">Botanical Systems: Terrestrial Flora</h2>
+                    <p class="text-stone-600 mt-2 max-w-3xl">In contrast to human systems, grass (shoots) and roots exhibit highly variable, environmentally-dependent growth vectors. Their growth is directly proportional to water availability up to a saturation point.</p>
+                </div>
+                <div class="flex gap-2 bg-white p-2 rounded-lg border border-stone-200 shadow-sm">
+                    <button onclick="setEnvironment('drought')" id="btn-drought" class="env-btn px-4 py-2 text-sm font-medium text-stone-600 rounded-md hover:bg-amber-50 hover:text-amber-700">Drought</button>
+                    <button onclick="setEnvironment('optimal')" id="btn-optimal" class="env-btn px-4 py-2 text-sm font-medium bg-teal-50 text-teal-700 rounded-md ring-1 ring-teal-600/20">Optimal</button>
+                    <button onclick="setEnvironment('flood')" id="btn-flood" class="env-btn px-4 py-2 text-sm font-medium text-stone-600 rounded-md hover:bg-blue-50 hover:text-blue-700">Flooded</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="col-span-1 md:col-span-2">
+                        <h3 class="text-xl font-semibold text-stone-800 mb-4">Comparative Daily Proliferation Rates</h3>
+                        <div class="chart-container h-80">
+                            <canvas id="plantChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-span-1 flex flex-col justify-center space-y-4">
+                        <div class="bg-green-50 border border-green-100 p-4 rounded-xl">
+                            <h4 class="font-bold text-green-800">Shoot Dynamics</h4>
+                            <p class="text-sm text-green-700 mt-1" id="shoot-text">Under optimal conditions, photosynthetic cells divide rapidly, seeking sunlight. Growth is highly responsive to hydration.</p>
+                        </div>
+                        <div class="bg-stone-100 border border-stone-200 p-4 rounded-xl">
+                            <h4 class="font-bold text-stone-800">Root Dynamics</h4>
+                            <p class="text-sm text-stone-700 mt-1" id="root-text">Roots exhibit hydrotropism. They will accelerate growth towards moisture during mild drought, but cease in completely dry or anaerobic (flooded) soils.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: Synthesis -->
+        <section id="synthesis" class="view-section">
+             <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-stone-800">Comparative Synthesis: The Samuelson Matrix</h2>
+                <p class="text-stone-600 mt-2">This interactive visualization plots all four biological elements based on their metabolic speed, dependency on immediate water availability, and the fundamental nature of their expansion.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                <div class="chart-container" style="height: 50vh; max-height: 600px; max-width: 1000px;">
+                    <canvas id="synthesisChart"></canvas>
+                </div>
+                
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+                    <div>
+                        <h4 class="font-bold text-stone-800 border-b pb-2 mb-2">Research Conclusions (Samuelson G.)</h4>
+                        <ul class="space-y-2 text-stone-600 list-disc pl-4">
+                            <li><strong>Ontological Divergence:</strong> Brain water is a <em>state of maintenance</em>; hair is <em>linear waste extrusion</em>; grass/roots are <em>adaptive expansion</em>.</li>
+                            <li><strong>Environmental Coupling:</strong> Botanical systems are tightly coupled to external hydration. Human systems are buffered by internal homeostasis (until systemic failure).</li>
+                            <li><strong>Velocity vs. Necessity:</strong> While hair growth is the slowest, it requires the least immediate water. Brain hydration requires massive, continuous water turnover without increasing in physical size.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-stone-50 p-4 rounded-lg border border-stone-200">
+                        <h4 class="font-bold text-stone-800 mb-2">How to read the chart:</h4>
+                        <p class="text-stone-600 mb-2">&#8594; <strong>X-Axis:</strong> Immediate reliance on environmental water input to function/grow.</p>
+                        <p class="text-stone-600 mb-2">&#8591; <strong>Y-Axis:</strong> Physical growth rate (Logarithmic scale: mm/day). Note: Brain is plotted near 0 as it doesn't grow physically, only turns over fluid.</p>
+                        <p class="text-stone-600">&#11044; <strong>Bubble Size:</strong> Represents total structural volatility (how quickly the system can change state or die based on conditions).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-100 mt-12 py-8 border-t border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 text-center text-stone-500 text-sm">
+            <p>&copy; 2026 Samuelson G. | Interactive Cross-Disciplinary Research Canvas.</p>
+            <p class="mt-2">Generated for analytical visualization purposes. All data represents normalized biological averages.</p>
+        </div>
+    </footer>
+
+    <!-- Application Logic & Chart Initialization -->
+    <script>
+        // --- State Management ---
+        const state = {
+            currentView: 'abstract',
+            environment: 'optimal' // drought, optimal, flood
+        };
+
+        // --- Data Repositories ---
+        const botanticalData = {
+            optimal: { grass: 12.0, roots: 8.0, textShoot: "Rapid cellular division seeking sunlight. Turgor pressure is ideal.", textRoot: "Steady expansion balancing anchorage and nutrient absorption." },
+            drought: { grass: 1.5, roots: 4.5, textShoot: "Growth halts to conserve water. Stomata close, photosynthesis drops.", textRoot: "Accelerated deep growth relative to shoots (hydrotropism) searching for water table, though overall rate is slowed." },
+            flood:   { grass: 4.0, roots: 0.5, textShoot: "Growth continues but may become etiolated if submerged.", textRoot: "Growth nearly stops due to anaerobic soil conditions causing root rot." }
+        };
+
+        const hairDataSets = {
+            normal: [0.35, 0.35, 0.34, 0.35, 0.36, 0.35, 0.35],
+            stress: [0.35, 0.32, 0.28, 0.25, 0.22, 0.20, 0.20] // Simulating telogen effluvium trigger
+        };
+
+        // --- Chart Instances ---
+        let chartBrain, chartHair, chartPlant, chartSynthesis;
+
+        // --- Core Functions ---
+        
+        // Navigation Handler
+        function switchView(viewId) {
+            // Update state
+            state.currentView = viewId;
+
+            // DOM UI Updates
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(viewId).classList.add('active');
+            
+            // Find the button that triggered this (based on onclick string)
+            const btns = document.querySelectorAll('.nav-btn');
+            for(let btn of btns) {
+                if(btn.getAttribute('onclick').includes(viewId)) {
+                    btn.classList.add('active');
+                }
+            }
+
+            // Lazy Load/Resize Charts for visibility
+            if(viewId === 'human') {
+                if(!chartBrain) initHumanCharts();
+                chartBrain.update(); chartHair.update();
+            } else if (viewId === 'botanical') {
+                if(!chartPlant) initBotanicalCharts();
+                chartPlant.update();
+            } else if (viewId === 'synthesis') {
+                if(!chartSynthesis) initSynthesisChart();
+                chartSynthesis.update();
+            }
+        }
+
+        // Initialize Human Charts (Doughnut & Line)
+        function initHumanCharts() {
+            // Brain Doughnut
+            const ctxBrain = document.getElementById('brainChart').getContext('2d');
+            chartBrain = new Chart(ctxBrain, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Water (Fluid State)', 'Lipids/Fats', 'Proteins', 'Carbs/Salts/Other'],
+                    datasets: [{
+                        data: [73, 11, 8, 8],
+                        backgroundColor: ['#0ea5e9', '#fcd34d', '#f87171', '#d6d3d1'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) { return context.label + ': ' + context.raw + '%'; }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+
+            // Hair Line (Simulating a week)
+            const ctxHair = document.getElementById('hairChart').getContext('2d');
+            chartHair = new Chart(ctxHair, {
+                type: 'line',
+                data: {
+                    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                    datasets: [{
+                        label: 'Growth Rate (mm/day)',
+                        data: hairDataSets.normal,
+                        borderColor: '#92400e', // amber-800
+                        backgroundColor: 'rgba(146, 64, 14, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            max: 0.5,
+                            title: { display: true, text: 'Millimeters per day' }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function updateHairData(condition) {
+            chartHair.data.datasets[0].data = hairDataSets[condition];
+            chartHair.update();
+        }
+
+        // Initialize Botanical Charts (Bar)
+        function initBotanicalCharts() {
+            const ctxPlant = document.getElementById('plantChart').getContext('2d');
+            chartPlant = new Chart(ctxPlant, {
+                type: 'bar',
+                data: {
+                    labels: ['Land Grass (Above Ground)', 'Plant Roots (Below Ground)'],
+                    datasets: [{
+                        label: 'Growth Rate (mm/day)',
+                        data: [botanticalData.optimal.grass, botanticalData.optimal.roots],
+                        backgroundColor: ['#22c55e', '#a8a29e'], // green-500, stone-400
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 15,
+                            title: { display: true, text: 'Growth Rate (mm/day)' }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function setEnvironment(env) {
+            state.environment = env;
+            
+            // Update Buttons UI
+            document.querySelectorAll('.env-btn').forEach(btn => {
+                btn.className = 'env-btn px-4 py-2 text-sm font-medium text-stone-600 rounded-md hover:bg-stone-100 transition-colors';
+            });
+            const activeBtn = document.getElementById('btn-' + env);
+            
+            if(env === 'optimal') activeBtn.className = 'env-btn px-4 py-2 text-sm font-medium bg-teal-50 text-teal-700 rounded-md ring-1 ring-teal-600/20 transition-colors';
+            if(env === 'drought') activeBtn.className = 'env-btn px-4 py-2 text-sm font-medium bg-amber-50 text-amber-700 rounded-md ring-1 ring-amber-600/20 transition-colors';
+            if(env === 'flood') activeBtn.className = 'env-btn px-4 py-2 text-sm font-medium bg-blue-50 text-blue-700 rounded-md ring-1 ring-blue-600/20 transition-colors';
+
+            // Update Chart
+            chartPlant.data.datasets[0].data = [botanticalData[env].grass, botanticalData[env].roots];
+            chartPlant.update();
+
+            // Update Text
+            document.getElementById('shoot-text').innerText = botanticalData[env].textShoot;
+            document.getElementById('root-text').innerText = botanticalData[env].textRoot;
+        }
+
+        // Initialize Synthesis Bubble Chart
+        function initSynthesisChart() {
+            const ctxSync = document.getElementById('synthesisChart').getContext('2d');
+            chartSynthesis = new Chart(ctxSync, {
+                type: 'bubble',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Brain Water',
+                            data: [{ x: 9.5, y: 0.01, r: 25 }], // High water dep, essentially 0 physical growth, high volatility if deprived
+                            backgroundColor: 'rgba(14, 165, 233, 0.7)', // sky-500
+                            borderColor: '#0284c7'
+                        },
+                        {
+                            label: 'Human Hair',
+                            data: [{ x: 2.0, y: 0.35, r: 8 }], // Low immediate water dep, slow growth, low volatility
+                            backgroundColor: 'rgba(217, 119, 6, 0.7)', // amber-600
+                            borderColor: '#b45309'
+                        },
+                        {
+                            label: 'Grass Shoots',
+                            data: [{ x: 8.5, y: 12.0, r: 18 }], // High dep, fast growth, mod volatility
+                            backgroundColor: 'rgba(34, 197, 94, 0.7)', // green-500
+                            borderColor: '#16a34a'
+                        },
+                        {
+                            label: 'Plant Roots',
+                            data: [{ x: 6.0, y: 8.0, r: 15 }], // Mod dep (searches for it), mod growth, mod volatility
+                            backgroundColor: 'rgba(168, 162, 158, 0.7)', // stone-400
+                            borderColor: '#78716c'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Dependency on Immediate Environmental Water (1 = Low, 10 = High)', font: {weight: 'bold'} },
+                            min: 0, max: 11
+                        },
+                        y: {
+                            type: 'logarithmic',
+                            title: { display: true, text: 'Physical Growth Rate (mm/day) [Log Scale]', font: {weight: 'bold'} },
+                            min: 0.001, max: 50,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    if(value === 0.01) return '0 (No structural growth)';
+                                    if(value === 0.1 || value === 1 || value === 10) return value;
+                                    return null;
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': Water Dep. = ' + context.raw.x + ', Speed = ' + (context.raw.y===0.01 ? 'N/A' : context.raw.y + ' mm/d');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
